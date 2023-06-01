@@ -4,7 +4,7 @@ Craft CMS wrapper for [crocodile2u/imgproxy-php](https://github.com/crocodile2u/
 
 ## Programmatic Option Comparison
 
-| Property             | Craft Transforms                      | imgproxy Self-Hosted                                                                   | imgproxy Pro                                                                                                                |
+| Property             | Craft Transforms                      | imgproxy OSS                                                                           | imgproxy Pro                                                                                                                |
 |----------------------|---------------------------------------|----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Quality              | ✓                                     | ✓                                                                                      | ✓                                                                                                                           |
 | Source Format        | ??                                    | `jpg`, `png`, `gif`, `webp`, `avif`, `ico`, `svg`, `heic`, `bmp`, `tiff`, `pdf`, `mp4` | `jpg`, `png`, `webp`, `avif`, `gif`, `ico`, `svg`, `heic`, `bmp`, `tiff`, `pdf`, `mp4`                                      |
