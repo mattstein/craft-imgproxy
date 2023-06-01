@@ -3,12 +3,12 @@
 namespace modules\imgproxy;
 
 use Craft;
-use Imgproxy\Exception;
-use Imgproxy\UrlBuilder;
 use craft\elements\Asset;
 use craft\web\twig\variables\CraftVariable;
-use modules\imgproxy\models\Imgproxy as TransformModel;
+use Imgproxy\Exception;
+use Imgproxy\UrlBuilder;
 use modules\imgproxy\models\Imgproxy;
+use modules\imgproxy\models\Imgproxy as TransformModel;
 use modules\imgproxy\variables\ImgproxyVariable;
 use yii\base\Event;
 use yii\base\Module as BaseModule;
@@ -67,7 +67,7 @@ class Module extends BaseModule
         Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
-            static function (Event $event) {
+            static function(Event $event) {
                 /** @var CraftVariable $variable */
                 $variable = $event->sender;
                 $variable->set('imgproxy', ImgproxyVariable::class);

@@ -56,26 +56,26 @@ class Imgproxy
         } else {
             $detectedDimensions = $this->getSourceDimensions();
 
-            if (! $detectedDimensions) {
+            if (!$detectedDimensions) {
                 throw new \Exception('Image dimensions are missing and could not be auto-detected.');
             }
 
             $sourceW = $detectedDimensions['width'];
             $sourceH = $detectedDimensions['height'];
 
-            if (isset($params['width']) && ! isset($params['height'])) {
+            if (isset($params['width']) && !isset($params['height'])) {
                 // Set width and calculate height
                 $this->width = $params['width'];
                 $this->height = $sourceH / ($sourceW / $this->width);
             }
 
-            if (! isset($params['width']) && isset($params['height'])) {
+            if (!isset($params['width']) && isset($params['height'])) {
                 // set height and calculate width
                 $this->height = $params['height'];
                 $this->width = ($sourceW / $sourceH) * $this->height;
             }
 
-            if (! isset($params['width']) && ! isset($params['height'])) {
+            if (!isset($params['width']) && !isset($params['height'])) {
                 // Default to source if we don’t have anything else
                 $this->width = $sourceW;
                 $this->height = $sourceH;
