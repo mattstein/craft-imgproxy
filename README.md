@@ -1,6 +1,6 @@
 # imgproxy Module
 
-Craft CMS wrapper for [crocodile2u/imgproxy-php](https://github.com/crocodile2u/imgproxy-php), aiming for 1:1 support with Craft’s native Asset transform parameters and making it possible to take advantage of imgproxy-only options.
+Craft CMS wrapper module for [crocodile2u/imgproxy-php](https://github.com/crocodile2u/imgproxy-php), aiming for 1:1 support with Craft’s native Asset transform parameters and making it possible to take advantage of imgproxy-only options.
 
 ## Programmatic Option Comparison
 
@@ -36,10 +36,31 @@ Craft CMS wrapper for [crocodile2u/imgproxy-php](https://github.com/crocodile2u/
 
 ## Setup
 
+### Install the Module
+
+```
+composer require mattstein/craft-imgproxy
+```
+
+In `config/app.php`:
+
+```php
+// ...
+return [
+    // ...
+    'modules' => [
+        'imgproxy' => modules\imgproxy\Module::class,
+    ],
+    'bootstrap' => ['imgproxy'],
+];
+```
+
+### Add Environment Variables
+
 Add the required `IMGPROXY_URL` and optional `IMGPROXY_KEY` and `IMGPROXY_SALT` environment variables for your imgproxy instance.
 
 ```
-IMGPROXY_URL=http://localhost:8080
+IMGPROXY_URL=https://my-imgproxy.example
 IMGPROXY_KEY=943b421c9eb07c830af81030552c86009268de4e532ba2ee2eab8247c6da0881
 IMGPROXY_SALT=520f986b998545b4785e0defbc4f3c1203f22de2374a3d53cb7a7fe9fea309c5
 ```
