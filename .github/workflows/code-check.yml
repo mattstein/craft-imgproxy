@@ -1,0 +1,43 @@
+name: Code Check
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }}
+    runs-on: ${{ matrix.operating-system }}
+
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ["8.0", "8.1", "8.2"]
+    env:
+      DEFAULT_COMPOSER_FLAGS: "--no-interaction --no-ansi --no-progress --no-suggest"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP Action
+        uses: shivammathur/setup-php@2.25.0
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, intl, gd, imagick, zip, dom, pdo_mysql, pdo_pgsql, fileinfo
+          ini-values: post_max_size=256M
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: PHPStan
+        run: composer run phpstan
+
+      - name: ECS
+        run: composer run check-cs
