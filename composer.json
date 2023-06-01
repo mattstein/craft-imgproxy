@@ -1,0 +1,24 @@
+{
+  "name": "mattstein/craft-imgproxy",
+  "description": "Build imgproxy image transform URLs with Craft-like parameters.",
+  "version": "1.0.0",
+  "require": {
+    "craftcms/cms": "^4.0",
+    "crocodile2u/imgproxy-php": "*",
+    "marc1706/fast-image-size": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "modules\\imgproxy\\": "src/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "craftcms/plugin-installer": true,
+      "yiisoft/yii2-composer": true,
+      "php-http/discovery": true
+    },
+    "sort-packages": true,
+    "optimize-autoloader": true
+  }
+}
