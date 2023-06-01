@@ -28,7 +28,7 @@ class Imgproxy
     private string|Asset $sourceUrl;
 
     /**
-     * @var array
+     * @var array<string, bool|string|null> $params
      */
     private array $params;
 
@@ -43,6 +43,9 @@ class Imgproxy
     private int $height;
 
     /**
+     * @param string|Asset $source
+     * @param array<string, bool|string|int|null> $params  Transform parameters
+     *
      * @throws \ImagickException
      * @throws Exception
      * @throws InvalidConfigException
@@ -50,7 +53,7 @@ class Imgproxy
      * @throws \yii\base\Exception
      * @throws \Exception
      */
-    public function __construct($source, $params = [])
+    public function __construct(Asset|string $source, array $params = [])
     {
         self::checkConfig();
 
@@ -94,9 +97,10 @@ class Imgproxy
     }
 
     /**
+     * @param array<string, bool|string|int|null> $params  Transform parameters
      * @throws Exception
      */
-    public function transform($params = []): Url
+    public function transform(array $params): Url
     {
         $builder = self::getBuilder();
 
@@ -200,8 +204,9 @@ class Imgproxy
             $url->options()->withRotate($params['rotate']);
         }
 
-        if (isset($params['cacheBuster'], $params['cachebuster'])) {
-            $url->options()->withCacheBuster($params['cacheBuster'] ?? $params['cachebuster']);
+        $cacheBusterValue = $params['cacheBuster'] ?? $params['cachebuster'] ?? null;
+        if ($cacheBusterValue) {
+            $url->options()->withCacheBuster($cacheBusterValue);
         }
 
         // filename
@@ -216,9 +221,10 @@ class Imgproxy
     }
 
     /**
+     * @param ?array<string, bool|string|int|null> $params  Transform parameters
      * @throws Exception
      */
-    public function getUrl($params = []): string
+    public function getUrl(?array $params = []): string
     {
         return $this->transform($params)
             ->toString();
@@ -241,7 +247,7 @@ class Imgproxy
     /**
      * Generates variations on the original transform with the specified sizes.
      *
-     * @param array $sizes
+     * @param array<string> $sizes
      * @return string Comma-separated sizes string ready for a `srcset` HTML attribute
      * @throws Exception
      */
@@ -286,12 +292,12 @@ class Imgproxy
         return implode(', ', $urls);
     }
 
-    public function getWidth()
+    public function getWidth(): int
     {
         return $this->width;
     }
 
-    public function getHeight()
+    public function getHeight(): int
     {
         return $this->height;
     }
@@ -312,7 +318,7 @@ class Imgproxy
      * an array of `['width' => int, 'height' => int]` or `false` if the auto-detection was
      * unsuccessful.
      *
-     * @return false|array
+     * @return false|array<string, int>
      * @throws \ImagickException
      * @throws FsException
      * @throws \yii\base\Exception
@@ -372,7 +378,9 @@ class Imgproxy
             fclose($stream);
             fclose($outputStream);
 
-            if ([$w, $h] = ImageHelper::imageSize($tempPath)) {
+            [$w, $h] = ImageHelper::imageSize($tempPath);
+
+            if ($w !== 0 && $h !== 0) {
                 return [
                     'width' => $w,
                     'height' => $h,

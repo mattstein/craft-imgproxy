@@ -2,6 +2,7 @@
 
 namespace modules\imgproxy\variables;
 
+use craft\elements\Asset;
 use Imgproxy\Exception;
 use Imgproxy\UrlBuilder;
 use modules\imgproxy\Module;
@@ -9,9 +10,11 @@ use modules\imgproxy\Module;
 class ImgproxyVariable
 {
     /**
+     * @param string|Asset                         $source  An Asset or an absolute URL
+     * @param array<string, bool|string|int|null>  $params  Transform parameters
      * @throws \Exception
      */
-    public function transform($source, $params): \modules\imgproxy\models\Imgproxy
+    public function transform(Asset|string $source, array $params): \modules\imgproxy\models\Imgproxy
     {
         return Module::getInstance()->getTransform($source, $params);
     }

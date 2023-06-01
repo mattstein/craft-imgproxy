@@ -44,12 +44,12 @@ class Module extends BaseModule
     /**
      * Returns URL builder object ready with the supplied transform params.
      *
-     * @param string|Asset $source
-     * @param array|null   $params
+     * @param string|Asset                          $source
+     * @param array<string, bool|string|int|null>   $params  Transform parameters
      * @return TransformModel
      * @throws \Exception
      */
-    public function getTransform($source, $params): TransformModel
+    public function getTransform(Asset|string $source, ?array $params): TransformModel
     {
         return new TransformModel($source, $params);
     }
