@@ -2,38 +2,6 @@
 
 Craft CMS wrapper module for [crocodile2u/imgproxy-php](https://github.com/crocodile2u/imgproxy-php), aiming for 1:1 support with Craft’s native Asset transform parameters and making it possible to take advantage of imgproxy-only options.
 
-## Programmatic Option Comparison
-
-| Property             | Craft Transforms                      | imgproxy OSS                                                                           | imgproxy Pro                                                                                                                |
-|----------------------|---------------------------------------|----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| Quality              | ✓                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Source Format        | ??                                    | `jpg`, `png`, `gif`, `webp`, `avif`, `ico`, `svg`, `heic`, `bmp`, `tiff`, `pdf`, `mp4` | `jpg`, `png`, `webp`, `avif`, `gif`, `ico`, `svg`, `heic`, `bmp`, `tiff`, `pdf`, `mp4`                                      |
-| Output Format        | `jpg`, `png`, `gif`, `webp`, `avif`   | `jpg`, `png`, `gif`, `webp`, `avif`,  `ico`, `svg`\*, `bmp`, `tiff`, `mp4`             | `jpg`, `png`, `gif`, `webp`, `avif`, `ico`, `svg`\*, `bmp`, `tiff`, `mp4`                                                   |
-| Crop Mode            | `crop`, `fit`, `stretch`, `letterbox` | `fit`, `fill`, `fill-down`, `force`, `auto`                                            | `fit`, `fill`, `fill-down`, `force`, `auto`                                                                                 |
-| Named Presets        | ✓                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Fill                 | ✓                                     | ✓                                                                                      | ✓                                                                                                                           |
-| DPR                  | -                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Filters              | -                                     | sharpen, pixelate, blur                                                                | background alpha, adjust, brightness, contrast, saturation, unsharpening, blur detections, draw detections, gradient, style |
-| Filename             | ✓                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Skip Processing, Raw | -                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Zoom                 | -                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Rotate               | -                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Padding              | -                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Watermark            | -                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Automatic            | -                                     | -                                                                                      | crop, rotate, quality, object detection                                                                                     |
-| PDF Page             | -                                     | -                                                                                      | ✓                                                                                                                           |
-| Fallback Image URL   | -                                     | -                                                                                      | ✓                                                                                                                           |
-| Strip metadata       | required                              | default (optional)                                                                     | default (optional)                                                                                                          |
-| Max bytes            | -                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Trim                 | -                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Keep copyright       | -                                     | ✓                                                                                      | ✓                                                                                                                           |
-| Return attachment    | -                                     | ✓                                                                                      | ✓                                                                                                                           |
-| GIF to MP4           | -                                     | -                                                                                      | ✓                                                                                                                           |
-
-[imgproxy supported source and output file formats](https://github.com/imgproxy/imgproxy/blob/master/docs/image_formats_support.md)
-
-[server configuration](https://docs.imgproxy.net/configuration?id=server)
-
 ## Setup
 
 ### Install the Module
@@ -122,3 +90,35 @@ Returns an instance if `imgproxy-php`’s `UrlBuilder` class so you can work wit
     alt: '',
 }) }}
 ```
+
+## Programmatic Option Comparison
+
+| Property             | Craft Transforms                      | imgproxy OSS                                                                           | imgproxy Pro                                                                                                                |
+|----------------------|---------------------------------------|----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Quality              | ✓                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Source Format        | ??                                    | `jpg`, `png`, `gif`, `webp`, `avif`, `ico`, `svg`, `heic`, `bmp`, `tiff`, `pdf`, `mp4` | `jpg`, `png`, `webp`, `avif`, `gif`, `ico`, `svg`, `heic`, `bmp`, `tiff`, `pdf`, `mp4`                                      |
+| Output Format        | `jpg`, `png`, `gif`, `webp`, `avif`   | `jpg`, `png`, `gif`, `webp`, `avif`,  `ico`, `svg`\*, `bmp`, `tiff`, `mp4`             | `jpg`, `png`, `gif`, `webp`, `avif`, `ico`, `svg`\*, `bmp`, `tiff`, `mp4`                                                   |
+| Crop Mode            | `crop`, `fit`, `stretch`, `letterbox` | `fit`, `fill`, `fill-down`, `force`, `auto`                                            | `fit`, `fill`, `fill-down`, `force`, `auto`                                                                                 |
+| Named Presets        | ✓                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Fill                 | ✓                                     | ✓                                                                                      | ✓                                                                                                                           |
+| DPR                  | -                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Filters              | -                                     | sharpen, pixelate, blur                                                                | background alpha, adjust, brightness, contrast, saturation, unsharpening, blur detections, draw detections, gradient, style |
+| Filename             | ✓                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Skip Processing, Raw | -                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Zoom                 | -                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Rotate               | -                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Padding              | -                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Watermark            | -                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Automatic            | -                                     | -                                                                                      | crop, rotate, quality, object detection                                                                                     |
+| PDF Page             | -                                     | -                                                                                      | ✓                                                                                                                           |
+| Fallback Image URL   | -                                     | -                                                                                      | ✓                                                                                                                           |
+| Strip metadata       | required                              | default (optional)                                                                     | default (optional)                                                                                                          |
+| Max bytes            | -                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Trim                 | -                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Keep copyright       | -                                     | ✓                                                                                      | ✓                                                                                                                           |
+| Return attachment    | -                                     | ✓                                                                                      | ✓                                                                                                                           |
+| GIF to MP4           | -                                     | -                                                                                      | ✓                                                                                                                           |
+
+[imgproxy supported source and output file formats](https://github.com/imgproxy/imgproxy/blob/master/docs/image_formats_support.md)
+
+[server configuration](https://docs.imgproxy.net/configuration?id=server)
