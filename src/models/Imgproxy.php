@@ -42,8 +42,18 @@ class Imgproxy
      */
     private int $height;
 
+    /**
+     * @throws \ImagickException
+     * @throws Exception
+     * @throws InvalidConfigException
+     * @throws FsException
+     * @throws \yii\base\Exception
+     * @throws \Exception
+     */
     public function __construct($source, $params = [])
     {
+        self::checkConfig();
+
         $this->source = $source;
         $this->params = $params;
         $this->sourceUrl = $this->source instanceof Asset ? $source->url : (string)$source;
@@ -219,9 +229,7 @@ class Imgproxy
      */
     public static function getBuilder(): UrlBuilder
     {
-        if (empty(App::env('IMGPROXY_URL'))) {
-            // TODO: complain
-        }
+        self::checkConfig();
 
         return new UrlBuilder(
             App::env('IMGPROXY_URL'),
@@ -286,6 +294,17 @@ class Imgproxy
     public function getHeight()
     {
         return $this->height;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private static function checkConfig(): void
+    {
+        if (empty(App::env('IMGPROXY_URL'))) {
+            // If we don’t have a base URL there’s no sense in doing anything else
+            throw new Exception('An imgproxy instance URL is required.');
+        }
     }
 
     /**

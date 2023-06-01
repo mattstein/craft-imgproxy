@@ -41,3 +41,6 @@ jobs:
 
       - name: ECS
         run: composer run check-cs
+
+      - name: Pest
+        run: composer run pest

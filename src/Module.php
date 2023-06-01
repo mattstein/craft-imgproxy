@@ -57,7 +57,7 @@ class Module extends BaseModule
     /**
      * @throws Exception
      */
-    public function getBuilder(): UrlBuilder
+    public static function getBuilder(): UrlBuilder
     {
         return Imgproxy::getBuilder();
     }
