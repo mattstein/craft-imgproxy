@@ -1,5 +1,7 @@
 # imgproxy Module
 
+[![Code Check](https://github.com/mattstein/craft-imgproxy/actions/workflows/code-check.yml/badge.svg)](https://github.com/mattstein/craft-imgproxy/actions/workflows/code-check.yml)
+
 Craft CMS wrapper module for [crocodile2u/imgproxy-php](https://github.com/crocodile2u/imgproxy-php), aiming for 1:1 support with Craft’s native Asset transform parameters and making it possible to take advantage of imgproxy-only options.
 
 ## Setup
