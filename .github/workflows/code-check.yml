@@ -28,7 +28,6 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: mbstring, intl, gd, imagick, zip, dom, pdo_mysql, pdo_pgsql, fileinfo
-          ini-values: post_max_size=256M, allow_url_fopen=1
 
       - name: Validate composer.json and composer.lock
         run: composer validate
