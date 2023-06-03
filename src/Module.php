@@ -3,10 +3,10 @@
 namespace modules\imgproxy;
 
 use Craft;
-use Imgproxy\Exception;
-use Imgproxy\UrlBuilder;
 use craft\elements\Asset;
 use craft\web\twig\variables\CraftVariable;
+use Imgproxy\Exception;
+use Imgproxy\UrlBuilder;
 use modules\imgproxy\models\ImgproxyTransform;
 use modules\imgproxy\variables\ImgproxyVariable;
 use yii\base\Event;

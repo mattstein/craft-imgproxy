@@ -2,11 +2,11 @@
 
 namespace modules\imgproxy\variables;
 
+use craft\elements\Asset;
 use Imgproxy\Exception;
 use Imgproxy\UrlBuilder;
-use craft\elements\Asset;
-use modules\imgproxy\Module;
 use modules\imgproxy\models\ImgproxyTransform;
+use modules\imgproxy\Module;
 
 class ImgproxyVariable
 {
