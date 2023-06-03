@@ -3,12 +3,11 @@
 namespace modules\imgproxy;
 
 use Craft;
-use craft\elements\Asset;
-use craft\web\twig\variables\CraftVariable;
 use Imgproxy\Exception;
 use Imgproxy\UrlBuilder;
-use modules\imgproxy\models\Imgproxy;
-use modules\imgproxy\models\Imgproxy as TransformModel;
+use craft\elements\Asset;
+use craft\web\twig\variables\CraftVariable;
+use modules\imgproxy\models\ImgproxyTransform;
 use modules\imgproxy\variables\ImgproxyVariable;
 use yii\base\Event;
 use yii\base\Module as BaseModule;
@@ -46,12 +45,12 @@ class Module extends BaseModule
      *
      * @param string|Asset                          $source
      * @param array<string, bool|string|int|null>   $params  Transform parameters
-     * @return TransformModel
+     * @return ImgproxyTransform
      * @throws \Exception
      */
-    public function getTransform(Asset|string $source, ?array $params): TransformModel
+    public function getTransform(Asset|string $source, ?array $params): ImgproxyTransform
     {
-        return new TransformModel($source, $params);
+        return new ImgproxyTransform($source, $params);
     }
 
     /**
@@ -59,7 +58,7 @@ class Module extends BaseModule
      */
     public static function getBuilder(): UrlBuilder
     {
-        return Imgproxy::getBuilder();
+        return ImgproxyTransform::getBuilder();
     }
 
     private function attachEventHandlers(): void

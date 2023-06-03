@@ -15,7 +15,7 @@ use Imgproxy\Url;
 use Imgproxy\UrlBuilder;
 use yii\base\InvalidConfigException;
 
-class Imgproxy
+class ImgproxyTransform
 {
     /**
      * @var Asset|string $source
@@ -97,7 +97,7 @@ class Imgproxy
     }
 
     /**
-     * @param array<string, bool|string|int|null> $params  Transform parameters
+     * @param array<string, bool|string|int|null|int[]> $params  Transform parameters
      * @throws Exception
      */
     public function transform(array $params): Url
@@ -115,8 +115,12 @@ class Imgproxy
         /**
          * Craft equivalents
          */
-        $defaultQuality = Craft::$app->getConfig()->general->defaultImageQuality;
-        $url->options()->withQuality($params['quality'] ?? $defaultQuality);
+        if (isset($params['quality'])) {
+            $url->options()->withQuality($params['quality']);
+        } elseif (class_exists('Craft')) {
+            $defaultQuality = Craft::$app->getConfig()->general->defaultImageQuality;
+            $url->options()->withQuality($defaultQuality);
+        }
 
         // https://docs.imgproxy.net/generating_the_url?id=format
         if (isset($params['format'])) {
@@ -170,8 +174,15 @@ class Imgproxy
             $url->options()->withEnlarge();
         }
 
-        // position
-        // interlace
+        if (isset($params['interlace'])) {
+            // Can only be applied to PNG
+            $url->options()->withPngOptions(true);
+        }
+
+        /**
+         * Offered by Craft but not obvious to translate here:
+         * - position
+         */
 
         /**
          * Exclusive imgproxy options
@@ -209,18 +220,31 @@ class Imgproxy
             $url->options()->withCacheBuster($cacheBusterValue);
         }
 
-        // filename
-        // skip processing?
-        // watermark
-        // zoom
-        // padding
+        if (isset($params['filename'])) {
+            $url->options()->withFilename($params['filename']);
+        }
 
-        // pro!
+        if (isset($params['padding'])) {
+            [$t, $r, $b, $l] = $params['padding'];
+            $url->options()->withPadding($t, $r, $b, $l);
+        }
+
+        /**
+         * To handle:
+         * - skip processing
+         * - watermark
+         * - zoom
+         * - raw
+         * - all pro options!
+         */
 
         return $url;
     }
 
     /**
+     * Returns the URL of the desired transform, as opposed to the URL class that would
+     * otherwise represent it.
+     *
      * @param ?array<string, bool|string|int|null> $params  Transform parameters
      * @throws Exception
      */
@@ -231,6 +255,7 @@ class Imgproxy
     }
 
     /**
+     * Returns a a UrlBuilder instance for direct interaction.
      * @throws Exception
      */
     public static function getBuilder(): UrlBuilder
@@ -278,10 +303,12 @@ class Imgproxy
             if ($size === '1x' || $size === '1.0x' || $size === $this->width . 'w') {
                 $urls[] = $this->getUrl();
             } else {
-                // TODO: actually support width designation and not just mulitiplier!
                 $currentParams = $this->params;
-                $currentParams['width'] = $this->width * $sizeValue;
-                $currentParams['height'] = $this->height * $sizeValue;
+                $currentParams['width'] = $descriptor === 'w' ? $sizeValue : round($this->width * $sizeValue);
+                $currentParams['height'] = round($descriptor === 'w' ?
+                    ($this->height * $currentParams['width']) / $this->width :
+                    $this->height * $sizeValue
+                );
 
                 $sizedUrl = $this->getUrl($currentParams);
 
