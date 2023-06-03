@@ -3,7 +3,7 @@
 use modules\imgproxy\Module;
 use modules\imgproxy\models\ImgproxyTransform;
 
-it('throws an exception for missing imgproxy URL', function() {
+it('throws an exception for a missing imgproxy URL', function() {
     Module::getBuilder();
 })->throws(Exception::class, 'An imgproxy instance URL is required.');
 
@@ -32,7 +32,7 @@ it('securely transforms simple URLs', function() {
         ->toEqual('https://imgproxy.tld/Y4ZryrU_4G_pazAKuQOmtt2TQYy5fFgPRgTkqkIIrPU/w:800/h:600/rt:fill/g:sm/el:1/aHR0cHM6Ly9mb28udGxkL2Jhci5qcGc.jpg');
 });
 
-it('generates expected srcset for URL transform', function() {
+it('generates expected srcset for URL transforms', function() {
     $transform = new ImgproxyTransform('https://foo.tld/bar.jpg', [
         'width' => 800,
         'height' => 600

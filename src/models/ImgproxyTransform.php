@@ -23,9 +23,9 @@ class ImgproxyTransform
     private string|Asset $source;
 
     /**
-     * @var string|Asset $sourceUrl
+     * @var string $sourceUrl
      */
-    private string|Asset $sourceUrl;
+    private string $sourceUrl;
 
     /**
      * @var array<string, bool|string|null> $params
@@ -51,7 +51,6 @@ class ImgproxyTransform
      * @throws InvalidConfigException
      * @throws FsException
      * @throws \yii\base\Exception
-     * @throws \Exception
      */
     public function __construct(Asset|string $source, array $params = [])
     {
@@ -70,7 +69,7 @@ class ImgproxyTransform
             $detectedDimensions = $this->getSourceDimensions();
 
             if (!$detectedDimensions) {
-                throw new \Exception('Image dimensions are missing and could not be auto-detected.');
+                throw new Exception('Image dimensions are missing and could not be auto-detected.');
             }
 
             $sourceW = $detectedDimensions['width'];
@@ -97,6 +96,11 @@ class ImgproxyTransform
     }
 
     /**
+     * Builds and returns a transform `Url` with the supplied parameters.
+     *
+     * This specifically maps Craft transform params to imgproxy params, then supports additional
+     * options that are unique to imgproxy.
+     *
      * @param array<string, bool|string|int|null|int[]> $params  Transform parameters
      * @throws Exception
      */
@@ -206,6 +210,7 @@ class ImgproxyTransform
         if (
             (isset($params['autoRotate']) && $params['autoRotate']) ||
             (isset($params['auto-rotate']) && $params['auto-rotate']) ||
+            (isset($params['auto_rotate']) && $params['auto_rotate']) ||
             (isset($params['autorotate']) && $params['autorotate'])
         ) {
             $url->options()->withAutoRotate();
@@ -231,12 +236,42 @@ class ImgproxyTransform
 
         /**
          * To handle:
+         * - trim
+         * - background
          * - skip processing
          * - watermark
          * - zoom
          * - raw
+         * - strip_metadata
+         * - keep_copyright
          * - all pro options!
          */
+
+        /**
+         * imgproxy Pro options
+         */
+
+        if (isset($params['brightness'])) {
+            $url->options()->withBrightness($params['brightness']);
+        }
+
+        if (isset($params['contrast'])) {
+            $url->options()->withContrast($params['contrast']);
+        }
+
+        if (isset($params['saturation'])) {
+            $url->options()->withSaturation($params['saturation']);
+        }
+
+        if (isset($params['page'])) {
+            $url->options()->withPage($params['page']);
+        }
+
+        if (isset($params['resizingAlgorithm'], $params['resizing_algorithm'])) {
+            $url->options()->withResizingAlgorithm(
+                $params['resizingAlgorithm'] ?: $params['resizing_algorithm']
+            );
+        }
 
         return $url;
     }
@@ -255,7 +290,7 @@ class ImgproxyTransform
     }
 
     /**
-     * Returns a a UrlBuilder instance for direct interaction.
+     * Returns a UrlBuilder instance for direct interaction.
      * @throws Exception
      */
     public static function getBuilder(): UrlBuilder
