@@ -390,8 +390,15 @@ class ImgproxyTransform
     {
         $isAsset = $this->source instanceof Asset;
 
+        if ($isAsset && ! empty($this->source->width) && ! empty($this->source->height)) {
+            return [
+                'width' => $this->source->width,
+                'height' => $this->source->height,
+            ];
+        }
+
         /**
-         * If we’ve got an Asset, first try to get dimensions with its stream.
+         * If we’ve got an Asset without both dimensions, first try to get dimensions with its stream.
          */
         if ($isAsset && [$w, $h] = ImageHelper::imageSizeByStream($this->source->getStream())) {
             return [
