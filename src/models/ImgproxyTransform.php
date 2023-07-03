@@ -390,7 +390,7 @@ class ImgproxyTransform
     {
         $isAsset = $this->source instanceof Asset;
 
-        if ($isAsset && ! empty($this->source->width) && ! empty($this->source->height)) {
+        if ($isAsset && !empty($this->source->width) && !empty($this->source->height)) {
             return [
                 'width' => $this->source->width,
                 'height' => $this->source->height,
