@@ -3,7 +3,7 @@
   "description": "Build imgproxy image transform URLs with Craft-like parameters.",
   "version": "1.0.0",
   "require": {
-    "craftcms/cms": "^4.0",
+    "craftcms/cms": "^4.0|^5.0",
     "crocodile2u/imgproxy-php": "*",
     "marc1706/fast-image-size": "*"
   },
