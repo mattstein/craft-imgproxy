@@ -160,8 +160,7 @@ class ImgproxyTransform
         $url->options()->withResizingType($resizeType);
 
         // focal point
-        if ($this->source instanceof Asset) {
-            $fp = $this->source->getFocalPoint();
+        if ($this->source instanceof Asset && $fp = $this->source->getFocalPoint()) {
             $url->options()->withGravity(Gravity::FOCUS_POINT, $fp['x'], $fp['y']);
         }
 
