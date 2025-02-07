@@ -49,8 +49,8 @@ Example:
   { width: 300, height: 300, mode: 'crop' }
 ) %}
 {{ tag('img', {
-    src: transform.getUrl(),
-    alt: asset.alt,
+  src: transform.getUrl(),
+  alt: asset.alt,
 }) }}
 ```
 
@@ -66,9 +66,9 @@ Example:
   { width: 300, height: 300, mode: 'crop' }
 ) %}
 {{ tag('img', {
-    src: transform.getUrl(),
-    srcset: transform.srcset(['1x', '2x', '3x']),
-    alt: asset.alt,
+  src: transform.getUrl(),
+  srcset: transform.srcset(['1x', '2x', '3x']),
+  alt: asset.alt,
 }) }}
 ```
 
@@ -78,18 +78,18 @@ Returns an instance if `imgproxy-php`’s `UrlBuilder` class so you can work wit
 
 ```twig
 {% set url = craft.imgproxy.getBuilder()
-    .build(asset.url, asset.width, asset.height)
-    .useAdvancedMode()
-    .setWidth(200)
-    .setHeight(200)
+  .build(asset.url, asset.width, asset.height)
+  .useAdvancedMode()
+  .setWidth(200)
+  .setHeight(200)
 %}
 
 {% do url.options().withRotate(180) %}
 {% do url.options().withPixelate(2) %}
 
 {{ tag('img', {
-    src: url.toString(),
-    alt: '',
+  src: url.toString(),
+  alt: '',
 }) }}
 ```
 
