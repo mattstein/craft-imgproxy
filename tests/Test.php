@@ -115,6 +115,17 @@ it('applies ratio to each width in srcset', function() {
     expect($srcset)->toContain('/w:2400/h:1350/');
 });
 
+it('uses ratio with width to calculate height (float format)', function() {
+    $transform = new ImgproxyTransform('https://foo.tld/bar.jpg', [
+        'width' => 800,
+        'ratio' => '1.7777777777778',
+    ]);
+
+    expect($transform->getWidth())->toEqual(800);
+    expect($transform->getHeight())->toEqual(450);
+    expect($transform->getUrl())->toContain('/w:800/h:450/');
+});
+
 it('throws an exception for an invalid ratio', function() {
     new ImgproxyTransform('https://foo.tld/bar.jpg', [
         'width' => 800,

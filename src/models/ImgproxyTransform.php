@@ -418,12 +418,17 @@ class ImgproxyTransform
      */
     private function parseRatio(string $ratio): array
     {
+        // Plain float/integer (e.g. 1.777...)
+        if (is_numeric($ratio)) {
+            return [(float) $ratio, 1.0];
+        }
+
         $separator = str_contains($ratio, '/') ? '/' : ':';
         $parts = explode($separator, $ratio, 2);
 
         if (count($parts) !== 2 || !is_numeric(trim($parts[0])) || !is_numeric(trim($parts[1]))) {
             throw new Exception(sprintf(
-                'Invalid ratio `%s`. Expected format like `16:9` or `3/2`.', $ratio
+                'Invalid ratio `%s`. Expected format like `16:9`, `3/2`, or a float like `1.778`.', $ratio
             ));
         }
 
