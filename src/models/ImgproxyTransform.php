@@ -305,6 +305,22 @@ class ImgproxyTransform
     }
 
     /**
+     * Takes the same options as `getUrl()` and returns a Base64-encoded data URI.
+     *
+     * @param array<string, mixed>|null $params
+     * @throws Exception
+     */
+    public function getDataUri(?array $params = []): string
+    {
+        $image = file_get_contents($this->getUrl($params));
+        $encoded = base64_encode($image);
+
+        $format = $params['format'] ?? $this->params['format'] ?? 'jpg';
+
+        return sprintf('data:image/%s;base64,%s', $format, $encoded);
+    }
+
+    /**
      * Returns a UrlBuilder instance for direct interaction.
      * @throws Exception
      */
@@ -397,6 +413,7 @@ class ImgproxyTransform
 
     /**
      * Parses a ratio string like `16:9` or `3/2` into a `[float $w, float $h]` array.
+     * @return array{float, float}
      * @throws Exception
      */
     private function parseRatio(string $ratio): array
