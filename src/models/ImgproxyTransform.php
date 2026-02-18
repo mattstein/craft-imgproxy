@@ -61,10 +61,19 @@ class ImgproxyTransform
         $this->sourceUrl = $this->source instanceof Asset ? $source->url : (string)$source;
 
         $hasBothTargetDimensions = isset($params['width'], $params['height']);
+        $hasRatio = isset($params['ratio']);
 
         if ($hasBothTargetDimensions) {
             $this->width = $params['width'];
             $this->height = $params['height'];
+        } elseif ($hasRatio && isset($params['width'])) {
+            [$rW, $rH] = $this->parseRatio($params['ratio']);
+            $this->width = $params['width'];
+            $this->height = (int) round($params['width'] * $rH / $rW);
+        } elseif ($hasRatio && isset($params['height'])) {
+            [$rW, $rH] = $this->parseRatio($params['ratio']);
+            $this->height = $params['height'];
+            $this->width = (int) round($params['height'] * $rW / $rH);
         } else {
             $detectedDimensions = $this->getSourceDimensions();
 
@@ -88,9 +97,16 @@ class ImgproxyTransform
             }
 
             if (!isset($params['width']) && !isset($params['height'])) {
-                // Default to source if we don’t have anything else
-                $this->width = $sourceW;
-                $this->height = $sourceH;
+                if ($hasRatio) {
+                    // Ratio without explicit dimensions: preserve source width, derive height
+                    [$rW, $rH] = $this->parseRatio($params['ratio']);
+                    $this->width = $sourceW;
+                    $this->height = (int) round($sourceW * $rH / $rW);
+                } else {
+                    // Default to source if we don't have anything else
+                    $this->width = $sourceW;
+                    $this->height = $sourceH;
+                }
             }
         }
     }
@@ -315,11 +331,12 @@ class ImgproxyTransform
         // https://docs.craftcms.com/api/v4/craft-elements-asset.html#method-getsrcset
         // https://github.com/craftcms/cms/blob/main/src/elements/Asset.php#L1580-L1599
 
-        if (!isset($this->params['width'])) {
-            throw new Exception('Width must be specified before using `srcset`');
+        if (!isset($this->params['width']) && !isset($this->params['ratio'])) {
+            throw new Exception('Width or ratio must be specified before using `srcset`');
         }
 
         $urls = [];
+        $ratio = isset($this->params['ratio']) ? $this->parseRatio($this->params['ratio']) : null;
 
         foreach ($sizes as $size) {
             // 1x or 1.0x or [width]w = unadjusted param set
@@ -339,10 +356,14 @@ class ImgproxyTransform
             } else {
                 $currentParams = $this->params;
                 $currentParams['width'] = $descriptor === 'w' ? $sizeValue : round($this->width * $sizeValue);
-                $currentParams['height'] = round($descriptor === 'w' ?
-                    ($this->height * $currentParams['width']) / $this->width :
-                    $this->height * $sizeValue
-                );
+
+                if ($descriptor === 'w') {
+                    $currentParams['height'] = $ratio
+                        ? (int) round($sizeValue * $ratio[1] / $ratio[0])
+                        : (int) round(($this->height * $currentParams['width']) / $this->width);
+                } else {
+                    $currentParams['height'] = (int) round($this->height * $sizeValue);
+                }
 
                 $sizedUrl = $this->getUrl($currentParams);
 
@@ -372,6 +393,24 @@ class ImgproxyTransform
             // If we don’t have a base URL there’s no sense in doing anything else
             throw new Exception('An imgproxy instance URL is required.');
         }
+    }
+
+    /**
+     * Parses a ratio string like `16:9` or `3/2` into a `[float $w, float $h]` array.
+     * @throws Exception
+     */
+    private function parseRatio(string $ratio): array
+    {
+        $separator = str_contains($ratio, '/') ? '/' : ':';
+        $parts = explode($separator, $ratio, 2);
+
+        if (count($parts) !== 2 || !is_numeric(trim($parts[0])) || !is_numeric(trim($parts[1]))) {
+            throw new Exception(sprintf(
+                'Invalid ratio `%s`. Expected format like `16:9` or `3/2`.', $ratio
+            ));
+        }
+
+        return [(float) trim($parts[0]), (float) trim($parts[1])];
     }
 
     /**

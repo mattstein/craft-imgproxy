@@ -69,6 +69,59 @@ it('throws an exception for missing dimensions that can’t be detected', functi
 
 
 
+it('uses ratio with width to calculate height (colon format)', function() {
+    $transform = new ImgproxyTransform('https://foo.tld/bar.jpg', [
+        'width' => 800,
+        'ratio' => '16:9',
+    ]);
+
+    expect($transform->getWidth())->toEqual(800);
+    expect($transform->getHeight())->toEqual(450);
+    expect($transform->getUrl())->toContain('/w:800/h:450/');
+});
+
+it('uses ratio with width to calculate height (slash format)', function() {
+    $transform = new ImgproxyTransform('https://foo.tld/bar.jpg', [
+        'width' => 800,
+        'ratio' => '3/2',
+    ]);
+
+    expect($transform->getWidth())->toEqual(800);
+    expect($transform->getHeight())->toEqual(533);
+    expect($transform->getUrl())->toContain('/w:800/h:533/');
+});
+
+it('uses ratio with height to calculate width', function() {
+    $transform = new ImgproxyTransform('https://foo.tld/bar.jpg', [
+        'height' => 450,
+        'ratio' => '16:9',
+    ]);
+
+    expect($transform->getWidth())->toEqual(800);
+    expect($transform->getHeight())->toEqual(450);
+    expect($transform->getUrl())->toContain('/w:800/h:450/');
+});
+
+it('applies ratio to each width in srcset', function() {
+    $transform = new ImgproxyTransform('https://foo.tld/bar.jpg', [
+        'width' => 800,
+        'ratio' => '16:9',
+    ]);
+
+    $srcset = $transform->getSrcset(['800w', '1600w', '2400w']);
+
+    expect($srcset)->toContain('/w:800/h:450/');
+    expect($srcset)->toContain('/w:1600/h:900/');
+    expect($srcset)->toContain('/w:2400/h:1350/');
+});
+
+it('throws an exception for an invalid ratio', function() {
+    new ImgproxyTransform('https://foo.tld/bar.jpg', [
+        'width' => 800,
+        'ratio' => 'bad',
+    ]);
+})->throws(Exception::class, 'Invalid ratio');
+
 /**
  * TODO:
  * - properly translates Craft transform params
