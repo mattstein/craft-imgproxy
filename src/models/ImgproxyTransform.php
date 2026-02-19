@@ -387,8 +387,10 @@ class ImgproxyTransform
                 throw new Exception(sprintf('Size value `%s` must be an int', $sizeValue));
             }
 
-            if ($size === '1x' || $size === '1.0x' || $size === $this->width . 'w') {
+            if ($size === '1x' || $size === '1.0x') {
                 $urls[] = $this->getUrl();
+            } elseif ($size === $this->width . 'w') {
+                $urls[] = $this->getUrl() . ' ' . $sizeValue . $descriptor;
             } else {
                 $currentParams = $this->params;
                 $currentParams['width'] = $descriptor === 'w' ? $sizeValue : round($this->width * $sizeValue);
