@@ -388,7 +388,7 @@ class ImgproxyTransform
             }
 
             if ($size === '1x' || $size === '1.0x' || $size === $this->width . 'w') {
-                $urls[] = $this->getUrl();
+                $urls[] = $this->getUrl() . ' ' . $sizeValue . $descriptor;
             } else {
                 $currentParams = $this->params;
                 $currentParams['width'] = $descriptor === 'w' ? $sizeValue : round($this->width * $sizeValue);
