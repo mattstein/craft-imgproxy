@@ -115,6 +115,69 @@ it('applies ratio to each width in srcset', function() {
     expect($srcset)->toContain('/w:2400/h:1350/');
 });
 
+it('generates srcset entries from array-form sizes with per-entry ratio', function() {
+    $transform = new ImgproxyTransform('https://foo.tld/bar.jpg', [
+        'width' => 800,
+        'ratio' => '16:9',
+    ]);
+
+    $srcset = $transform->getSrcset([
+        ['width' => 800, 'ratio' => '16:9'],
+        ['width' => 400, 'ratio' => '1/1'],
+    ]);
+
+    expect($srcset)->toContain('/w:800/h:450/');
+    expect($srcset)->toContain('800w');
+    // per-entry ratio overrides the transform-level 16:9
+    expect($srcset)->toContain('/w:400/h:400/');
+    expect($srcset)->toContain('400w');
+});
+
+it('array-form size without ratio falls back to transform-level ratio', function() {
+    $transform = new ImgproxyTransform('https://foo.tld/bar.jpg', [
+        'width' => 800,
+        'ratio' => '16:9',
+    ]);
+
+    $srcset = $transform->getSrcset([['width' => 400]]);
+
+    // 400 * 9/16 = 225
+    expect($srcset)->toContain('/w:400/h:225/');
+    expect($srcset)->toContain('400w');
+});
+
+it('array-form size without ratio falls back to proportional scaling', function() {
+    $transform = new ImgproxyTransform('https://foo.tld/bar.jpg', [
+        'width' => 800,
+        'height' => 600,
+    ]);
+
+    $srcset = $transform->getSrcset([['width' => 400]]);
+
+    // 600 * 400 / 800 = 300
+    expect($srcset)->toContain('/w:400/h:300/');
+    expect($srcset)->toContain('400w');
+});
+
+it('generates srcset with mixed string and array-form size entries', function() {
+    $transform = new ImgproxyTransform('https://foo.tld/bar.jpg', [
+        'width' => 800,
+        'ratio' => '16:9',
+    ]);
+
+    $srcset = $transform->getSrcset([
+        '1600w',
+        ['width' => 400, 'ratio' => '1/1'],
+    ]);
+
+    // string entry uses transform-level ratio: 1600 * 9/16 = 900
+    expect($srcset)->toContain('/w:1600/h:900/');
+    expect($srcset)->toContain('1600w');
+    // array entry overrides with 1:1
+    expect($srcset)->toContain('/w:400/h:400/');
+    expect($srcset)->toContain('400w');
+});
+
 it('uses ratio with width to calculate height (float format)', function() {
     $transform = new ImgproxyTransform('https://foo.tld/bar.jpg', [
         'width' => 800,

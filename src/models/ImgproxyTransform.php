@@ -338,7 +338,12 @@ class ImgproxyTransform
     /**
      * Generates variations on the original transform with the specified sizes.
      *
-     * @param array<string> $sizes
+     * Each entry in `$sizes` may be either:
+     * - A plain descriptor string like `'800w'` or `'2x'`
+     * - An associative array like `['width' => 800, 'ratio' => '1/1']`, where `ratio` is
+     *   optional and overrides the transform-level ratio for that entry only.
+     *
+     * @param array<string|array<string, mixed>> $sizes
      * @return string Comma-separated sizes string ready for a `srcset` HTML attribute
      * @throws Exception
      */
@@ -352,9 +357,24 @@ class ImgproxyTransform
         }
 
         $urls = [];
-        $ratio = isset($this->params['ratio']) ? $this->parseRatio($this->params['ratio']) : null;
+        $transformRatio = isset($this->params['ratio']) ? $this->parseRatio($this->params['ratio']) : null;
 
         foreach ($sizes as $size) {
+            // Array form: ['width' => 800, 'ratio' => '1/1']
+            if (is_array($size)) {
+                $sizeWidth = $size['width'];
+                $entryRatio = isset($size['ratio']) ? $this->parseRatio($size['ratio']) : $transformRatio;
+
+                $currentParams = $this->params;
+                $currentParams['width'] = $sizeWidth;
+                $currentParams['height'] = $entryRatio
+                    ? (int) round($sizeWidth * $entryRatio[1] / $entryRatio[0])
+                    : (int) round(($this->height * $sizeWidth) / $this->width);
+
+                $urls[] = $this->getUrl($currentParams) . ' ' . $sizeWidth . 'w';
+                continue;
+            }
+
             // 1x or 1.0x or [width]w = unadjusted param set
             $descriptor = $size[strlen($size) - 1];
             $sizeValue = (float)rtrim($size, $descriptor);
@@ -374,8 +394,8 @@ class ImgproxyTransform
                 $currentParams['width'] = $descriptor === 'w' ? $sizeValue : round($this->width * $sizeValue);
 
                 if ($descriptor === 'w') {
-                    $currentParams['height'] = $ratio
-                        ? (int) round($sizeValue * $ratio[1] / $ratio[0])
+                    $currentParams['height'] = $transformRatio
+                        ? (int) round($sizeValue * $transformRatio[1] / $transformRatio[0])
                         : (int) round(($this->height * $currentParams['width']) / $this->width);
                 } else {
                     $currentParams['height'] = (int) round($this->height * $sizeValue);
