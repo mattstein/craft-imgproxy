@@ -45,7 +45,7 @@ it('generates expected srcset for URL transforms', function() {
         ->toEqual('https://imgproxy.tld/xz8fxPiWE0JFYmyH1Dq6syanDKLmmpYTlRa4dAU92d0/w:1200/h:900/rt:fill/g:sm/el:1/aHR0cHM6Ly9mb28udGxkL2Jhci5qcGc.jpg 1.5x, https://imgproxy.tld/LkhK296CoGv1YssunCHerKlC-MAV72hlGZtOms95Mug/w:2200/h:1650/rt:fill/g:sm/el:1/aHR0cHM6Ly9mb28udGxkL2Jhci5qcGc.jpg 2.75x, https://imgproxy.tld/9H-xVR_B8MIUn8KrX2FBeudjxx6l8Qth2GIxd6QmNDY/w:2600/h:1950/rt:fill/g:sm/el:1/aHR0cHM6Ly9mb28udGxkL2Jhci5qcGc.jpg 3.25x');
 
     expect($transform->getSrcset(['800w', '1600w', '2400w']))
-        ->toEqual('https://imgproxy.tld/Y4ZryrU_4G_pazAKuQOmtt2TQYy5fFgPRgTkqkIIrPU/w:800/h:600/rt:fill/g:sm/el:1/aHR0cHM6Ly9mb28udGxkL2Jhci5qcGc.jpg, https://imgproxy.tld/S1D30exb7jZqr__xMCo1YRHyIVz1OZ8GpLrzvqQlzUk/w:1600/h:1200/rt:fill/g:sm/el:1/aHR0cHM6Ly9mb28udGxkL2Jhci5qcGc.jpg 1600w, https://imgproxy.tld/J-tXZxQX7OfqqK6VTxDx2y1o-9NX8OssA-yTCV8bAvM/w:2400/h:1800/rt:fill/g:sm/el:1/aHR0cHM6Ly9mb28udGxkL2Jhci5qcGc.jpg 2400w');
+        ->toEqual('https://imgproxy.tld/Y4ZryrU_4G_pazAKuQOmtt2TQYy5fFgPRgTkqkIIrPU/w:800/h:600/rt:fill/g:sm/el:1/aHR0cHM6Ly9mb28udGxkL2Jhci5qcGc.jpg 800w, https://imgproxy.tld/S1D30exb7jZqr__xMCo1YRHyIVz1OZ8GpLrzvqQlzUk/w:1600/h:1200/rt:fill/g:sm/el:1/aHR0cHM6Ly9mb28udGxkL2Jhci5qcGc.jpg 1600w, https://imgproxy.tld/J-tXZxQX7OfqqK6VTxDx2y1o-9NX8OssA-yTCV8bAvM/w:2400/h:1800/rt:fill/g:sm/el:1/aHR0cHM6Ly9mb28udGxkL2Jhci5qcGc.jpg 2400w');
 });
 
 it('auto-detects missing dimension', function() {
