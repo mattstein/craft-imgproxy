@@ -193,7 +193,7 @@ class ImgproxyTransform
             $url->options()->withEnlarge();
         }
 
-        if (isset($params['interlace'])) {
+        if (isset($params['interlace']) && isset($params['format']) && $params['format'] === 'png') {
             // Can only be applied to PNG
             $url->options()->withPngOptions(true);
         }
